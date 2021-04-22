@@ -12,10 +12,10 @@
   </head>
   <body>
 
-    <div class="container">
+    <div class="container mt-5">
         <div class="row">
-            <div class="col">
-                <div class="card">
+            <div class="col d-flex justify-content-center align-items-center">
+                <div class="card w-75">
                     <div class="card-header">
                         Login
                     </div>
@@ -29,7 +29,12 @@
                                 <label for="password">Password</label>
                                 <input type="password" class="form-control" id="password">
                             </div>
-                            <button type="submit" class="btn btn-primary">Submit</button>
+                            <button type="submit" class="btn btn-primary">Login</button>
+                            <div class="form-group text-center">
+                                <small>Don't have an account?</small>
+                                <br>
+                                <a href="register.php">Register</a>
+                            </div>
                         </form>
                     </div>
                 </div>
