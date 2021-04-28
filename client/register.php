@@ -5,7 +5,7 @@
 
     if(isset($_POST['submit']) && count($errors) === 0){
         //insert query
-        $query = "INSERT INTO User (email, password, Date_Created) VALUES ('?', '?', '2021-04-28');";
+        $query = "INSERT INTO User (email, pass) VALUES ('?', '?');";
         $stmt = $conn->prepare($query);
         $stmt->bind_param("ss", $email, $password);
 
