@@ -1,3 +1,5 @@
+<!-- TODO check for cookies or session for auto login -->
+
 <!doctype html>
 <html lang="en">
   <head>

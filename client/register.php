@@ -1,3 +1,10 @@
+<?php
+    //TODO check for cookies/session if user types into the url (include file)
+    include 'database.php';
+    include 'formHandler.php';
+
+?>
+
 <!doctype html>
 <html lang="en">
   <head>
@@ -21,20 +28,40 @@
                         Register
                     </div>
                     <div class="card-body">
-                        <form>
+                        <form method="POST">
+                        <!-- TODO error for user with that email already exists -->
                             <div class="form-group">
                                 <label for="email">Email address</label>
-                                <input type="email" class="form-control" id="email">
+                                <input type="email" class="form-control" name="email" id="email" value="<?php echo $_POST['email'] ?? '' ?>">
+                                <?php
+                                    if($errors['emptyEmail']){
+                                        echo '<small class="text-danger">Please enter a email address.</small>';
+                                    }
+                                ?>
                             </div>
                             <div class="form-group">
                                 <label for="password">Password</label>
-                                <input type="password" class="form-control" id="password">
+                                <input type="password" class="form-control" name="password" id="password" value="<?php echo $_POST['password'] ?? '' ?>">
+                                <?php
+                                    if($errors['emptyPassword']){
+                                        echo '<small class="text-danger">Please enter a password.</small>';
+                                    } else if ($errors['nonMatchingPasswords']) {
+                                        echo '<small class="text-danger">Your passwords do not match.</small>';
+                                    }
+                                ?>
                             </div>
                             <div class="form-group">
                                 <label for="confirmPassword">Confirm Password</label>
-                                <input type="confirmPassword" class="form-control" id="confirmPassword">
+                                <input type="password" class="form-control" name="confirmPassword" id="confirmPassword" value="<?php echo $_POST['confirmPassword'] ?? '' ?>">
+                                <?php
+                                    if($errors['emptyConfirmPassword']){
+                                        echo '<small class="text-danger">Please confirm your password.</small>';
+                                    } else if ($errors['nonMatchingPasswords']) {
+                                        echo '<small class="text-danger">Your passwords do not match.</small>';
+                                    }
+                                ?>                           
                             </div>
-                            <button type="submit" class="btn btn-primary">Register</button>
+                            <button type="submit" name="submit" class="btn btn-primary">Register</button>
                             <div class="form-group text-center">
                                 <small>Already have an account?</small>
                                 <br>
