@@ -3,6 +3,22 @@
     include 'database.php';
     include 'formHandler.php';
 
+    if(isset($_POST['submit']) && count($errors) === 0){
+        //insert query
+        $query = "INSERT INTO User (email, password, Date_Created) VALUES ('?', '?', '2021-04-28');";
+        $stmt = $conn->prepare($query);
+        $stmt->bind_param("ss", $email, $password);
+
+        $stmt->execute();
+        $result = $stmt->get_result();
+        var_dump($result);
+        if($result->num_rows === 0){
+            $errors['invalidCredentials'] = 'Username or password is incorrect.';
+        } else {
+            //TODO start session or store cookies
+            header("Location: home.php");        
+        }
+    }
 ?>
 
 <!doctype html>
@@ -33,33 +49,29 @@
                             <div class="form-group">
                                 <label for="email">Email address</label>
                                 <input type="email" class="form-control" name="email" id="email" value="<?php echo $_POST['email'] ?? '' ?>">
-                                <?php
-                                    if($errors['emptyEmail']){
-                                        echo '<small class="text-danger">Please enter a email address.</small>';
-                                    }
-                                ?>
+                                <small class="text-danger">
+                                    <?php echo (isset($errors['emptyEmail']) ? $errors['emptyEmail'] : "" ); ?>
+                                </small>
                             </div>
                             <div class="form-group">
                                 <label for="password">Password</label>
                                 <input type="password" class="form-control" name="password" id="password" value="<?php echo $_POST['password'] ?? '' ?>">
-                                <?php
-                                    if($errors['emptyPassword']){
-                                        echo '<small class="text-danger">Please enter a password.</small>';
-                                    } else if ($errors['nonMatchingPasswords']) {
-                                        echo '<small class="text-danger">Your passwords do not match.</small>';
-                                    }
-                                ?>
+                                <small class="text-danger">
+                                    <?php 
+                                        echo (isset($errors['emptyPassword']) ? $errors['emptyPassword'] : "" ); 
+                                        echo (isset($errors['nonMatchingPasswords']) ? $errors['nonMatchingPasswords'] : "" ); 
+                                    ?>
+                                </small>
                             </div>
                             <div class="form-group">
                                 <label for="confirmPassword">Confirm Password</label>
                                 <input type="password" class="form-control" name="confirmPassword" id="confirmPassword" value="<?php echo $_POST['confirmPassword'] ?? '' ?>">
-                                <?php
-                                    if($errors['emptyConfirmPassword']){
-                                        echo '<small class="text-danger">Please confirm your password.</small>';
-                                    } else if ($errors['nonMatchingPasswords']) {
-                                        echo '<small class="text-danger">Your passwords do not match.</small>';
-                                    }
-                                ?>                           
+                                <small class="text-danger">
+                                    <?php 
+                                        echo (isset($errors['emptyConfirmPassword']) ? $errors['emptyConfirmPassword'] : "" ); 
+                                        echo (isset($errors['nonMatchingPasswords']) ? $errors['nonMatchingPasswords'] : "" ); 
+                                    ?>
+                                </small>                     
                             </div>
                             <button type="submit" name="submit" class="btn btn-primary">Register</button>
                             <div class="form-group text-center">

@@ -3,20 +3,19 @@
     include 'database.php';
     include 'formHandler.php';
 
-    if(!($email === "") && !($password === "")){
-        $query = "SELECT * FROM User WHERE email = ? AND password = ?";
+    if(isset($_POST['submit']) && count($errors) === 0){
+        $query = "SELECT * FROM user WHERE email = ? AND pass = ?";
         $stmt = $conn->prepare($query);
         $stmt->bind_param("ss", $email, $password);
 
         $stmt->execute();
         $result = $stmt->get_result();
-
         if($result->num_rows === 0){
-            $errors['invalidCredentials'] = true;
+            $errors['invalidCredentials'] = 'Username or password is incorrect.';
         } else {
             //TODO start session or store cookies
-            $errors['invalidCredentials'] = false;
-            header("Location: home.php");        }
+            header("Location: home.php");        
+        }
     }
 ?>
 
@@ -43,28 +42,23 @@
                     </div>
                     <div class="card-body">
                         <form method="POST">
-                            <?php
-                                if(!($errors['emptyEmail'] || $errors['emptyPassword']) && $errors['invalidCredentials']){
-                                    echo '<small class="text-danger">Email and/or password incorrect.</small>';
-                                }
-                            ?>
+                            <small class="text-danger">
+                                <?php echo (isset($errors['invalidCredentials']) ? $errors['invalidCredentials'] : "" ); ?>
+                            </small>
+
                             <div class="form-group">
                                 <label for="email">Email address</label>
                                 <input type="email" class="form-control" name="email" id="email" value="<?php echo $_POST['email'] ?? '' ?>">
-                                <?php
-                                    if($errors['emptyEmail']){
-                                        echo '<small class="text-danger">Please enter a email address.</small>';
-                                    }
-                                ?>
+                                <small class="text-danger">
+                                    <?php echo (isset($errors['emptyEmail']) ? $errors['emptyEmail'] : "" ); ?>
+                                </small>
                             </div>
                             <div class="form-group">
                                 <label for="password">Password</label>
                                 <input type="password" class="form-control" name="password" id="password" value="<?php echo $_POST['password'] ?? '' ?>">
-                                <?php
-                                    if($errors['emptyPassword']){
-                                        echo '<small class="text-danger">Please enter a password.</small>';
-                                    }
-                                ?>
+                                <small class="text-danger">
+                                    <?php echo (isset($errors['emptyPassword']) ? $errors['emptyPassword'] : "" ); ?>
+                                </small>
                             </div>
                             <button type="submit" name="submit" class="btn btn-primary">Login</button>
                             <div class="form-group text-center">

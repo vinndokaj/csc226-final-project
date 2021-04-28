@@ -6,43 +6,29 @@
 
         return $input;
     }
-
-    $errors = array(
-        'emptyEmail' => false,
-        'emptyPassword' => false,
-        'emptyConfirmPassword' => false,
-        'invalidCredentials' => false,
-        'nonMatchingPasswords' => false,
-    );
-    // $errors = [];
+    
+    $errors = [];
 
     if(isset($_POST['submit'])){
         $email = santizeInput($_POST['email']);
         $password = santizeInput($_POST['password']);
 
         if($email === ""){
-            $errors['emptyEmail'] = true;
-        } else {
-            $errors['emptyEmail'] = false;
+            $errors['emptyEmail'] = 'Please enter a email address.';
         }
 
         if($password === ""){
-            $errors['emptyPassword'] = true;
-        } else {
-            $errors['emptyPassword'] = false;
+            $errors['emptyPassword'] = 'Please enter a password.';
         }
 
         if(isset($_POST['confirmPassword'])){
             $confirmPassword = santizeInput($_POST['confirmPassword']);
             
             if($confirmPassword === ""){
-                $errors['emptyConfirmPassword'] = true;
+                $errors['emptyConfirmPassword'] = 'Please confirm your password.';
             } else {
-                $errors['emptyConfirmPassword'] = false;
-                if($confirmPassword === $password){
-                    $errors['nonMatchingPasswords'] = false;
-                } else {
-                    $errors['nonMatchingPasswords'] = true;
+                if($confirmPassword != $password){
+                    $errors['nonMatchingPasswords'] = 'Your passwords do not match.';
                 }
             }
         }
