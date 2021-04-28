@@ -6,7 +6,8 @@ CREATE TABLE user (
     uid INT AUTO_INCREMENT PRIMARY KEY,
     email VARCHAR(255),
     pass VARCHAR(255),
-    date_created DATETIME DEFAULT CURRENT_TIMESTAMP
+    date_created DATETIME DEFAULT CURRENT_TIMESTAMP,
+    UNIQUE (email)
 );
 
 CREATE TABLE movie (

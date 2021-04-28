@@ -4,19 +4,17 @@
     include 'formHandler.php';
 
     if(isset($_POST['submit']) && count($errors) === 0){
-        //insert query
-        $query = "INSERT INTO User (email, pass) VALUES ('?', '?');";
+        $query = "INSERT INTO user (email, pass) VALUES (?, ?);";
         $stmt = $conn->prepare($query);
         $stmt->bind_param("ss", $email, $password);
 
-        $stmt->execute();
-        $result = $stmt->get_result();
-        var_dump($result);
-        if($result->num_rows === 0){
-            $errors['invalidCredentials'] = 'Username or password is incorrect.';
-        } else {
-            //TODO start session or store cookies
-            header("Location: home.php");        
+        try {
+            $stmt->execute();
+            $result = $stmt->get_result();
+            var_dump($result);
+        } catch(Exception $e) {
+            error_log($e->getMessage());
+            $errors['userAlreadyExists'] = "An account with that email already exists.";
         }
     }
 ?>
@@ -45,7 +43,10 @@
                     </div>
                     <div class="card-body">
                         <form method="POST">
-                        <!-- TODO error for user with that email already exists -->
+                            <!-- TODO error for user with that email already exists -->
+                            <small class="text-danger">
+                                <?php echo (isset($errors['userAlreadyExists']) ? $errors['userAlreadyExists'] : "" ); ?>
+                            </small>
                             <div class="form-group">
                                 <label for="email">Email address</label>
                                 <input type="email" class="form-control" name="email" id="email" value="<?php echo $_POST['email'] ?? '' ?>">

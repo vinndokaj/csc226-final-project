@@ -8,14 +8,20 @@
         $stmt = $conn->prepare($query);
         $stmt->bind_param("ss", $email, $password);
 
-        $stmt->execute();
-        $result = $stmt->get_result();
-        if($result->num_rows === 0){
-            $errors['invalidCredentials'] = 'Username or password is incorrect.';
-        } else {
-            //TODO start session or store cookies
-            header("Location: home.php");        
+        try {
+            $stmt->execute();
+            $result = $stmt->get_result();
+            if($result->num_rows === 0){
+                $errors['invalidCredentials'] = 'Username or password is incorrect.';
+            } else {
+                //TODO start session or store cookies
+                header("Location: home.php");        
+            }
+        } catch(Exception $e){
+            error_log($e->getMessage());
+            exit("Error connecting to the database for log in.");
         }
+
     }
 ?>
 
