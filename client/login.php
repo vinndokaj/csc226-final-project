@@ -5,12 +5,13 @@
 
     if(isset($_POST['submit']) && count($errors) === 0){
         $query = "SELECT * FROM user WHERE email = ? AND pass = ?";
-        $stmt = $conn->prepare($query);
-        $stmt->bind_param("ss", $email, $password);
 
         try {
+            $stmt = $conn->prepare($query);
+            $stmt->bind_param("ss", $email, $password);
             $stmt->execute();
             $result = $stmt->get_result();
+            
             if($result->num_rows === 0){
                 $errors['invalidCredentials'] = 'Username or password is incorrect.';
             } else {
