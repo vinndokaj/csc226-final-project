@@ -1,3 +1,24 @@
+<?php
+    //TODO check for cookies/session if user types into the url (include file)
+    include 'database.php';
+    include 'formHandler.php';
+
+    if(isset($_POST['submit']) && count($errors) === 0){
+        $query = "INSERT INTO user (email, pass) VALUES (?, ?);";
+
+        try {
+            $stmt = $conn->prepare($query);
+            $stmt->bind_param("ss", $email, $password);
+            $stmt->execute();
+            $result = $stmt->get_result();
+            var_dump($result);
+        } catch(Exception $e) {
+            error_log($e->getMessage());
+            $errors['userAlreadyExists'] = "An account with that email already exists.";
+        }
+    }
+?>
+
 <!doctype html>
 <html lang="en">
   <head>
@@ -21,20 +42,39 @@
                         Register
                     </div>
                     <div class="card-body">
-                        <form>
+                        <form method="POST">
+                            <!-- TODO error for user with that email already exists -->
+                            <small class="text-danger">
+                                <?php echo (isset($errors['userAlreadyExists']) ? $errors['userAlreadyExists'] : "" ); ?>
+                            </small>
                             <div class="form-group">
                                 <label for="email">Email address</label>
-                                <input type="email" class="form-control" id="email">
+                                <input type="email" class="form-control" name="email" id="email" value="<?php echo $_POST['email'] ?? '' ?>">
+                                <small class="text-danger">
+                                    <?php echo (isset($errors['emptyEmail']) ? $errors['emptyEmail'] : "" ); ?>
+                                </small>
                             </div>
                             <div class="form-group">
                                 <label for="password">Password</label>
-                                <input type="password" class="form-control" id="password">
+                                <input type="password" class="form-control" name="password" id="password" value="<?php echo $_POST['password'] ?? '' ?>">
+                                <small class="text-danger">
+                                    <?php 
+                                        echo (isset($errors['emptyPassword']) ? $errors['emptyPassword'] : "" ); 
+                                        echo (isset($errors['nonMatchingPasswords']) ? $errors['nonMatchingPasswords'] : "" ); 
+                                    ?>
+                                </small>
                             </div>
                             <div class="form-group">
                                 <label for="confirmPassword">Confirm Password</label>
-                                <input type="confirmPassword" class="form-control" id="confirmPassword">
+                                <input type="password" class="form-control" name="confirmPassword" id="confirmPassword" value="<?php echo $_POST['confirmPassword'] ?? '' ?>">
+                                <small class="text-danger">
+                                    <?php 
+                                        echo (isset($errors['emptyConfirmPassword']) ? $errors['emptyConfirmPassword'] : "" ); 
+                                        echo (isset($errors['nonMatchingPasswords']) ? $errors['nonMatchingPasswords'] : "" ); 
+                                    ?>
+                                </small>                     
                             </div>
-                            <button type="submit" class="btn btn-primary">Register</button>
+                            <button type="submit" name="submit" class="btn btn-primary">Register</button>
                             <div class="form-group text-center">
                                 <small>Already have an account?</small>
                                 <br>

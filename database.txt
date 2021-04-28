@@ -1,0 +1,31 @@
+CREATE DATABASE NetflixClone;
+
+USE NetflixClone;
+
+CREATE TABLE user (
+    uid INT AUTO_INCREMENT PRIMARY KEY,
+    email VARCHAR(255),
+    pass VARCHAR(255),
+    date_created DATETIME DEFAULT CURRENT_TIMESTAMP,
+    UNIQUE (email)
+);
+
+CREATE TABLE movie (
+    mid INT AUTO_INCREMENT PRIMARY KEY,
+    title VARCHAR(255), 
+    description VARCHAR(255), 
+    cover_art VARCHAR(255),
+    date_created DATETIME DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE review ( 
+    rid INT AUTO_INCREMENT PRIMARY KEY, 
+    title VARCHAR(255), 
+    content VARCHAR(255), 
+    rating INT, 
+    date_created DATETIME DEFAULT CURRENT_TIMESTAMP, 
+    movie_id INT, 
+    user_id INT, 
+    FOREIGN KEY (movie_id) REFERENCES movie(mid), 
+    FOREIGN KEY (user_id) REFERENCES user(uid)
+);

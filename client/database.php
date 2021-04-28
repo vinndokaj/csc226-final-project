@@ -7,7 +7,7 @@ try{
   //Define the constants
   define("servername", "localhost");
   define("username", "root");
-  define("password", "password");
+  define("password", "");
   define("database", "NetflixClone");
 
   // Create connection
