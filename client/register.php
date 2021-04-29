@@ -1,6 +1,6 @@
 <?php
     //TODO check for cookies/session if user types into the url (include file)
-    include 'database.php';
+    include '../database.php';
     include 'formHandler.php';
 
     if(isset($_POST['submit']) && count($errors) === 0){
