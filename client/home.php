@@ -14,6 +14,25 @@
         exit("Error connecting to the database to get all movies.");
     }
 
+    function createMovieCard($info){
+        $mid = $info['mid'];
+        $imgPath = $info['cover_art'];
+        $title = $info['title'];
+        $description = $info['description'];
+        echo "
+        <div class='col mb-3'>
+            <div class='card p-3 h-100' style='width: 22rem;'>
+                <img src='$imgPath' class='card-img-top' alt='...'>
+                <div class='card-body'>
+                    <h5 class='card-title'>$title</h5>
+                    <p class='card-text'>$description</p>
+                    <a href='movie.php?mid=$mid' class='btn btn-primary'>Reviews</a>
+                </div>
+            </div>
+        </div>
+        ";
+    }
+
     //TODO get users favorite movies (off of UID in cookie)
 
 ?>
@@ -45,7 +64,6 @@
         <div class="row row-cols-3">
             <?php
                 //TODO cycle over user's favorite movies and put in a boostrap card
-            
             ?>
             <div class="col">
                 user favorite movie
@@ -62,32 +80,11 @@
         <div class="row row-cols-3">
             <?php
                 while($row = $allMovieResult->fetch_assoc()){
-                    $mid = $row['mid'];
-                    $imgPath = $row['cover_art'];
-                    $title = $row['title'];
-                    $description = $row['description'];
-                    echo "
-                    <div class='col mb-3'>
-                        <div class='card p-3 h-100' style='width: 22rem;'>
-                            <img src='$imgPath' class='card-img-top' alt='...'>
-                            <div class='card-body'>
-                                <h5 class='card-title'>$title</h5>
-                                <p class='card-text'>$description</p>
-                                <a href='movie.php?mid=$mid' class='btn btn-primary'>Reviews</a>
-                            </div>
-                        </div>
-                    </div>
-                    ";
+                    createMovieCard($row);
                 }
             ?>
         </div>
-
-    
     </div>
-
-
-
-
 
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/js/bootstrap.bundle.min.js" integrity="sha384-Piv4xVNRyMGpqkS2by6br4gNJ7DXjqk09RmUpJ8jgGtD7zP9yug3goQfGII0yAns" crossorigin="anonymous"></script>

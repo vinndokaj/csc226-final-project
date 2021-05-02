@@ -21,7 +21,7 @@ CREATE TABLE movie (
 CREATE TABLE review ( 
     rid INT AUTO_INCREMENT PRIMARY KEY, 
     title VARCHAR(255), 
-    content VARCHAR(255), 
+    content TEXT, 
     rating INT, 
     date_created DATETIME DEFAULT CURRENT_TIMESTAMP, 
     movie_id INT, 
@@ -29,6 +29,10 @@ CREATE TABLE review (
     FOREIGN KEY (movie_id) REFERENCES movie(mid), 
     FOREIGN KEY (user_id) REFERENCES user(uid)
 );
+
+INSERT INTO user (email, pass) VALUES ("temp@temp.com", "123456");
+INSERT INTO user (email, pass) VALUES ("blah@blah.com", "qwerty");
+
 
 INSERT INTO movie (title, description, cover_art) VALUES ("Borat Subsequent Moviefilm", "Released from prison for bringing shame to his country, Kazakh funnyman Borat risks life and limb when he returns to America with his 15-year-old daughter.", 'images/borat-2.jpg');
 INSERT INTO movie (title, description, cover_art) VALUES ("City of Lies", "Los Angeles Police Department detective Russell Poole has spent years trying to solve his biggest case -- the murders of The Notorious B.I.G. and Tupac Shakur -- but after two decades, the investigation remains open. Jack Jackson, a reporter desperate to save his reputation and career, is determined to find out why. In search of the truth, the two team up and unravel a growing web of institutional corruption and lies.", 'images/City-of-Lies.jpg');
@@ -44,3 +48,6 @@ INSERT INTO movie (title, description, cover_art) VALUES ("The White Tiger", "A 
 INSERT INTO movie (title, description, cover_art) VALUES ("The Unholy", "A girl inexplicably gains the power to heal the sick after a supposed visitation from the Virgin Mary. As word spreads and people flock to witness her miracles, a disgraced journalist visits the small New England town to investigate. However, when strange events start to occur, he soon wonders if these phenomena are the result of something more sinister.", 'images/unholy.jpeg');
 INSERT INTO movie (title, description, cover_art) VALUES ("The Midnight Sky", "A lone scientist in the Arctic races to contact a crew of astronauts returning home to a mysterious global catastrophe.", 'images/midnight-sky.jpg');
 INSERT INTO movie (title, description, cover_art) VALUES ("Zack Snyder's Justice League", "Fueled by his restored faith in humanity and inspired by Superman's selfless act, Bruce Wayne enlists newfound ally Diana Prince to face an even greater threat. Together, Batman and Wonder Woman work quickly to recruit a team to stand against this newly awakened enemy. Despite the formation of an unprecedented league of heroes -- Batman, Wonder Woman, Aquaman, Cyborg and the Flash -- it may be too late to save the planet from an assault of catastrophic proportions.", 'images/Zack-Snyder-Justice-League.jpg');
+
+INSERT INTO review (title, content, rating, movie_id, user_id) VALUES ("Laughed my pants off!", "This movie was a fantastic sequel. Although Borat didn't get alot of screen time due to his popularity his 'daughter' was hilarious! Watch it soon!", 5, 1, 1);
+INSERT INTO review (title, content, rating, movie_id, user_id) VALUES ("SO DUMB!", "This movie was a waste of time. I wanted to see borat not his dumb daughter she wasnt even funny. Don't watch this expecting a true borat sequel.", 1, 1, 2);
