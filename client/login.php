@@ -1,7 +1,14 @@
 <?php
-    //TODO check for cookies/session (include file)
+
+    include "../session.php";
     include '../database.php';
     include 'formHandler.php';
+
+    //Redirect user if session already exists.
+    if (isset($_SESSION['user_email']) && !empty($_SESSION['user_email'])) 
+    {
+        header("Location: home.php");   
+    }
 
     if(isset($_POST['submit']) && count($errors) === 0){
         $query = "SELECT * FROM user WHERE email = ? AND pass = ?";

@@ -1,23 +1,28 @@
 <?php
-    //TODO check for cookies/session if user types into the url (include file)
+    include '../session.php';
     include '../database.php';
     include 'formHandler.php';
 
-    if(isset($_POST['submit']) && count($errors) === 0){
-        $query = "INSERT INTO user (email, pass) VALUES (?, ?);";
+    //Redirect user if session already exists.
+  if (isset($_SESSION['user_email']) && !empty($_SESSION['user_email'])) 
+  {
+      header("Location: home.php");   
+  }
 
-        try {
-            $stmt = $conn->prepare($query);
-            $stmt->bind_param("ss", $email, $password);
-            $stmt->execute();
-            $result = $stmt->get_result();
+  if(isset($_POST['submit']) && count($errors) === 0){
+      $query = "INSERT INTO user (email, pass) VALUES (?, ?);";
+      try {
+        $stmt = $conn->prepare($query);
+        $stmt->bind_param("ss", $email, $password);
+        $stmt->execute();
+        $result = $stmt->get_result();
 
-            header("Location: login.php");
-        } catch(Exception $e) {
-            error_log($e->getMessage());
-            $errors['userAlreadyExists'] = "An account with that email already exists.";
-        }
-    }
+        header("Location: login.php");
+      } catch(Exception $e) {
+        error_log($e->getMessage());
+        $errors['userAlreadyExists'] = "An account with that email already exists.";
+      }
+  }
 ?>
 
 <!doctype html>

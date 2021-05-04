@@ -1,11 +1,10 @@
 <?php
+include "../session.php";
 
-//Start session
-session_start();
-
-//If user_email session variable exists, display homepage
-if(isset($_SESSION['user_email']) && !empty($_SESSION['user_email'])) {
-  ?>
+//Redirect user if session already exists.
+if (isset($_SESSION['user_email']) && !empty($_SESSION['user_email'])) 
+{
+    ?>
 
 <!doctype html>
 <html lang="en">
