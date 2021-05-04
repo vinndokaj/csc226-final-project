@@ -1,7 +1,10 @@
 <?php
-    //TODO check for cookies to allow access
+    include "../session.php";
 
-    include '../database.php';
+    if(!isset($_SESSION['user_email'])){
+        header("Location: index.php");
+        exit(0);
+    }
 
     //if no mid is specificed redirect to homepage 
     if(!isset($_GET['mid'])){
@@ -56,7 +59,6 @@
         $avgReview = $avgReview / $reviewResult->num_rows;
     }
 
-
     //TODO save review to db
 ?>
 
@@ -76,8 +78,7 @@
     <nav class="navbar navbar-dark bg-dark">
         <a class="navbar-brand" href="home.php">NetflixClone</a>
         <form class="form-inline">
-            <!-- TODO logout function: remove cookie and redirect to index or login page -->
-            <button class="btn btn-sm btn-outline-danger" type="button">Log Out</button>
+            <a class="btn btn-sm btn-outline-danger" href="logout.php">Log Out</a>
         </form>
     </nav>
 
