@@ -6,6 +6,8 @@
         exit(0);
     }
 
+    include '../database.php';
+
     //if no mid is specificed redirect to homepage 
     if(!isset($_GET['mid'])){
         header("Location: home.php");
