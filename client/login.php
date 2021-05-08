@@ -5,9 +5,9 @@
     include 'formHandler.php';
 
     //Redirect user if session already exists.
-    if (isset($_SESSION['user_email']) && !empty($_SESSION['user_email'])) 
+    if (isset($_SESSION['user_email']) && !empty($_SESSION['user_email']))
     {
-        header("Location: home.php");   
+        header("Location: home.php");
     }
 
     if(isset($_POST['submit']) && count($errors) === 0){
@@ -19,6 +19,7 @@
             $stmt->bind_param("s", $email);
             $stmt->execute();
             $result = $stmt->get_result();
+<<<<<<< HEAD
             $row = $result->fetch_assoc();
             
             //No account exists with these credentials
@@ -26,9 +27,17 @@
                 $errors['invalidCredentials'] = 'Username or password is incorrect.';
             } 
             
+=======
+
+            //No account exists with these credentials
+            if($result->num_rows === 0){
+                $errors['invalidCredentials'] = 'Username or password is incorrect.';
+            }
+>>>>>>> a0008eb... Removed trailing whitespace on login pages
             //Verify hashed password and start session if it is a match
             if(password_verify($_POST['password'], $row['pass'])){
                 session_start();
+<<<<<<< HEAD
                 //changed to $row to ensure db data getting saved not user data 
                 $_SESSION["uid"] = $row["uid"]; 
                 $_SESSION["user_email"] = $row["email"];
@@ -36,6 +45,12 @@
                 
             } else {
                 $errors['invalidCredentials'] = 'Username or password is incorrect.';
+=======
+
+                $_SESSION["user_email"] = $email;
+                header("Location: home.php");
+
+>>>>>>> a0008eb... Removed trailing whitespace on login pages
             }
         } catch(Exception $e){
             error_log($e->getMessage());
