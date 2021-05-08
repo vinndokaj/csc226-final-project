@@ -10,8 +10,12 @@
     $errors = [];
 
     if(isset($_POST['submit'])){
+        //Sanitize
         $email = santizeInput($_POST['email']);
         $password = santizeInput($_POST['password']);
+
+        //Create salt and hashed password
+        $hashedPassword = password_hash($password, PASSWORD_DEFAULT);
 
         if($email === ""){
             $errors['emptyEmail'] = 'Please enter a email address.';

@@ -13,7 +13,7 @@
       $query = "INSERT INTO user (email, pass) VALUES (?, ?);";
       try {
         $stmt = $conn->prepare($query);
-        $stmt->bind_param("ss", $email, $password);
+        $stmt->bind_param("ss", $email, $hashedPassword);
         $stmt->execute();
         $result = $stmt->get_result();
 

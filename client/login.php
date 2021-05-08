@@ -15,14 +15,16 @@
 
         try {
             $stmt = $conn->prepare($query);
-            $stmt->bind_param("ss", $email, $password);
+            $stmt->bind_param("ss", $email, $hashedPassword);
             $stmt->execute();
             $result = $stmt->get_result();
             
+            //No account exists with these credentials
             if($result->num_rows === 0){
                 $errors['invalidCredentials'] = 'Username or password is incorrect.';
-            } else {
-                //TODO start session or store cookies
+            } 
+            //Verify hashed password and start session if it is a match
+            if(password_verify($_POST['password'], $hashedPassword)){
                 session_start();
 
                 $_SESSION["user_email"] = $email;
