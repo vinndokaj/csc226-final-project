@@ -11,25 +11,31 @@
     }
 
     if(isset($_POST['submit']) && count($errors) === 0){
-        $query = "SELECT * FROM user WHERE email = ? AND pass = ?";
+        //remove password comparison for later use with password_verify
+        $query = "SELECT * FROM user WHERE email = ?";
 
         try {
             $stmt = $conn->prepare($query);
-            $stmt->bind_param("ss", $email, $hashedPassword);
+            $stmt->bind_param("s", $email);
             $stmt->execute();
             $result = $stmt->get_result();
+            $row = $result->fetch_assoc();
             
             //No account exists with these credentials
             if($result->num_rows === 0){
                 $errors['invalidCredentials'] = 'Username or password is incorrect.';
             } 
+            
             //Verify hashed password and start session if it is a match
-            if(password_verify($_POST['password'], $hashedPassword)){
+            if(password_verify($_POST['password'], $row['pass'])){
                 session_start();
-
-                $_SESSION["user_email"] = $email;
+                //changed to $row to ensure db data getting saved not user data 
+                $_SESSION["uid"] = $row["uid"]; 
+                $_SESSION["user_email"] = $row["email"];
                 header("Location: home.php");    
                 
+            } else {
+                $errors['invalidCredentials'] = 'Username or password is incorrect.';
             }
         } catch(Exception $e){
             error_log($e->getMessage());
