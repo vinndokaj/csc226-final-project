@@ -1,7 +1,8 @@
 <?php
     include "../session.php";
+    include 'reviewHandler.php';
 
-    if(!isset($_SESSION['user_email'])){
+    if(!isset($_SESSION['user_email']) || !isset($_SESSION['uid'])){
         header("Location: index.php");
         exit(0);
     }
@@ -33,10 +34,26 @@
         header("Location: home.php");
     }
 
-    //TODO new review form: rating, title, content
+    //save review to db
+    if(isset($_POST['submit']) && count($errors) === 0){
+        $insertReviewQuery = 'INSERT INTO review (title, content, rating, movie_id, user_id) VALUES (?,?,?,?,?)';
+
+        try{
+            $stmt = $conn->prepare($insertReviewQuery);
+            $stmt->bind_param("ssiii", $title, $content, $rating, $movie_id, $_SESSION['uid']);
+            $stmt->execute();
+            header("Refresh:0");
+        }catch(Exception $e){
+            error_log($e->getMessage());
+            exit("Error inserting review into the database.");
+        }
+    }
 
     //get all movies reviews using movie_id
     $reviewQuery = "SELECT * FROM review WHERE movie_id=?";
+
+    //query to include user email if desired
+    //$reviewQuery = 'SELECT r.*, u.email FROM review as r JOIN user as u ON u.uid=r.user_id WHERE movie_id=?;'
 
     try{
         $stmt = $conn->prepare($reviewQuery);
@@ -60,8 +77,6 @@
     if(!$noReviewsFlag){
         $avgReview = $avgReview / $reviewResult->num_rows;
     }
-
-    //TODO save review to db
 ?>
 
 <!doctype html>
@@ -95,7 +110,7 @@
                     <p class="display-4 p-3"><?php echo $movieInfo['title']?></p>
                     <div>
                         <span class="font-weight-bold p-3">Rating:</span>
-                        <span class="p-3"><?php echo $avgReview === 0 ? 'No Reviews Yet' : $avgReview ?><span>
+                        <span class="p-3"><?php echo $avgReview === 0 ? 'No Reviews Yet' : round($avgReview, 1)?><span>
                     </div>
                     <br>
                     <div>
@@ -117,25 +132,51 @@
         <!-- TODO save review to db -->
         <div class="row p-4 border rounded mb-1">
             <span class="font-weight-bold">Write a new Review!</span>
-            <form class="w-100" onsubmit="return false">
+            <form class="w-100" method="POST">
                 <div class="form-group">
                     <label for="title">Title</label>
-                    <input type="text" class="form-control" id="title" placeholder="Your Title Here (up to 255 characters)" maxlength="255">
+                    <input 
+                        type="text" 
+                        class="form-control" 
+                        name="title" id="title" 
+                        value="<?php echo $_POST['title'] ?? '' ?>"
+                        placeholder="Your Title Here (up to 255 characters)" 
+                        maxlength="255"
+                    >
+                    <small class="text-danger">
+                        <?php echo (isset($errors['emptyTitle']) ? $errors['emptyTitle'] : "" ); ?>
+                    </small>
                 </div>
                 <div class="form-group d-inline-flex">
                     <label class="mr-3" for="rating">Rating</label>
-                    <select class="form-control" id="rating">
-                        <option value="1">1</option>
-                        <option value="2">2</option>
-                        <option value="3">3</option>
-                        <option value="4">4</option>
-                        <option value="5">5</option>
-                    </select>
-
+                    <select class="form-control" name="rating" id="rating">
+                        <option value="">-- Select --</option>
+                        <?php
+                            for($i = 1; $i <= 5; $i++){
+                                echo "<option value='$i'";
+                                if(isset($_POST['rating']) && $_POST['rating'] == $i){
+                                    echo " selected";
+                                }
+                                echo ">$i</option>";
+                            }
+                        ?>
+                    </select>               
                 </div>
+                <small class="text-danger">
+                    <?php echo (isset($errors['emptyRating']) ? $errors['emptyRating'] : "" ); ?>
+                </small>  
                 <div class="form-group">
                     <label for="content">Content</label>
-                    <textarea class="form-control" id="content" placeholder="Your review..." rows="4"></textarea>
+                    <textarea 
+                        class="form-control" 
+                        name="content" 
+                        id="content" 
+                        placeholder="Your review..." 
+                        rows="4"
+                    ><?php echo $_POST['content'] ?? '' ?></textarea>
+                    <small class="text-danger">
+                        <?php echo (isset($errors['emptyContent']) ? $errors['emptyContent'] : "" ); ?>
+                    </small>
                 </div>
                 <button type="submit" name="submit" class="btn btn-primary">Submit Review</button>
             </form>
@@ -161,10 +202,17 @@
                     $content = $review['content'];
                     echo "
                     <div class='row p-4 border rounded mb-1'>
-                        <div class='d-flex flex-column'>
+                        <div class=''>
                             <span class='font-weight-bold'>$title</span>
+                            <br>
                             <span class='font-italic'>Rating: $rating</span>
+                            <br>
                             <span class='text-muted'>$content</span>
+                    ";
+                    if($_SESSION['uid'] === $review['user_id']){
+                        echo "<br><button class='mt-1 btn btn-outline-danger' onclick>Delete Review</button>";
+                    }
+                    echo "
                         </div>
                     </div>
                     ";

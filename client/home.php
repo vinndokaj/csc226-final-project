@@ -1,6 +1,7 @@
 <?php
   include "../session.php";
 
+  var_dump($_SESSION);
   if(!isset($_SESSION['user_email'])){
     header("Location: index.php");
     exit(0);
