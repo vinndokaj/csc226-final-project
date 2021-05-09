@@ -59,9 +59,9 @@
 
 <body class="bg-light">
   <nav class="navbar navbar-dark bg-dark">
-    <a class="navbar-brand">NetflixClone</a>
+    <a class="navbar-brand" href="home.php">NetflixClone</a>
     <li class="navbar-nav mr-auto">
-      <a class="nav-link" href="favorites.php">Link</a>
+      <a class="nav-link" href="favorites.php">Favorites</a>
     </li>
     <form class="form-inline">
       <a class="btn btn-sm btn-outline-danger" href="logout.php">Log Out</a>
@@ -69,22 +69,6 @@
   </nav>
 
   <div class="container mt-3">
-    <p>Your Favorites</p>
-    <hr>
-    <div class="row row-cols-3">
-      <?php
-                //TODO cycle over user's favorite movies and put in a boostrap card
-            ?>
-      <div class="col">
-        user favorite movie
-      </div>
-      <div class="col">
-        user favorite movie
-      </div>
-      <div class="col">
-        user favorite movie
-      </div>
-    </div>
     <p class="mt-5">All Movies</p>
     <hr>
     <div class="row row-cols-3">
