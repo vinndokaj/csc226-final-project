@@ -33,6 +33,7 @@
                   <h5 class='card-title'>$title</h5>
                   <p class='card-text'>$description</p>
                   <a href='movie.php?mid=$mid' class='btn btn-primary'>Reviews</a>
+                  <button type='button' class='btn btn-outline-warning btn-sm'>Favorite</button>
               </div>
           </div>
       </div>
