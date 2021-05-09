@@ -9,12 +9,14 @@
 
   include '../database.php';
 
-  $query = "SELECT * FROM movie;";
+  //Retrieve movie details from favorited table
+  $id= $_SESSION["uid"];
+  $query = "SELECT movie.mid, movie.cover_art, movie.title, movie.description FROM movie RIGHT JOIN user_movies ON user_movies.mid = movie.mid";
 
   try {
       $stmt = $conn->prepare($query);
       $stmt->execute();
-      $allMovieResult = $stmt->get_result();
+      $favorites = $stmt->get_result();
   } catch (Exception $e){
       error_log($e->getMessage());
       exit("Error connecting to the database to get all movies.");
@@ -33,12 +35,15 @@
                   <h5 class='card-title'>$title</h5>
                   <p class='card-text'>$description</p>
                   <a href='movie.php?mid=$mid' class='btn btn-primary'>Reviews</a>
-                  <button type='button' class='btn btn-outline-warning btn-sm'>Favorite</button>
+                  <button type='button' class='btn btn-outline-warning btn-sm'>Unfavorite</button>
               </div>
           </div>
       </div>
       ";
   }
+
+
+
 ?>
 
 <!doctype html>
@@ -53,7 +58,7 @@
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/css/bootstrap.min.css"
     integrity="sha384-B0vP5xmATw1+K9KRQjQERJvTumQW0nPEzvF6L/Z6nronJ3oUOFUFpCjEUQouq2+l" crossorigin="anonymous">
 
-  <title>Browse Movies</title>
+  <title>Favorites</title>
 </head>
 
 <body class="bg-light">
@@ -68,15 +73,16 @@
   </nav>
 
   <div class="container mt-3">
-    <p class="mt-5">All Movies</p>
+    <p>Your Favorites</p>
     <hr>
     <div class="row row-cols-3">
       <?php
-                while($row = $allMovieResult->fetch_assoc()){
-                    createMovieCard($row);
-                }
-            ?>
+        while($row = $favorites->fetch_assoc()){
+          createMovieCard($row);
+        }
+      ?>
     </div>
+
   </div>
 
   <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"
