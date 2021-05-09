@@ -87,7 +87,7 @@
             header("Refresh:0");
         }catch(Exception $e){
             error_log($e->getMessage());
-            exit("Error connecting to the database to get movie with id $movie_id.");
+            exit("Error connecting to the database to delete review.");
         }
     }
 
