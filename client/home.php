@@ -1,7 +1,6 @@
 <?php
   include "../session.php";
 
-  var_dump($_SESSION);
   if(!isset($_SESSION['user_email'])){
     header("Location: index.php");
     exit(0);
@@ -61,6 +60,9 @@
 <body class="bg-light">
   <nav class="navbar navbar-dark bg-dark">
     <a class="navbar-brand">NetflixClone</a>
+    <li class="navbar-nav mr-auto">
+      <a class="nav-link" href="favorites.php">Link</a>
+    </li>
     <form class="form-inline">
       <a class="btn btn-sm btn-outline-danger" href="logout.php">Log Out</a>
     </form>
