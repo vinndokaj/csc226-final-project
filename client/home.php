@@ -1,6 +1,7 @@
 <?php
   include "../session.php";
 
+  //If there is no session, redirect to landing page
   if(!isset($_SESSION['user_email'])){
     header("Location: index.php");
     exit(0);

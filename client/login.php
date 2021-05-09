@@ -29,7 +29,8 @@
             //Verify hashed password and start session if it is a match
             if(password_verify($_POST['password'], $row['pass'])){
                 session_start();
-                //changed to $row to ensure db data getting saved not user data 
+                
+                //Define session variables from database
                 $_SESSION["uid"] = $row["uid"]; 
                 $_SESSION["user_email"] = $row["email"];
                 header("Location: home.php");    
