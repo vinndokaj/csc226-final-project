@@ -38,9 +38,6 @@
       </div>
       ";
   }
-
-  //TODO get users favorite movies (off of UID in cookie)
-
 ?>
 
 <!doctype html>
