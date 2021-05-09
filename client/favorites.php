@@ -1,6 +1,7 @@
 <?php
   include "../session.php";
 
+  //If there is no session, redirect to landing page
   if(!isset($_SESSION['user_email'])){
     header("Location: index.php");
     exit(0);
@@ -8,12 +9,14 @@
 
   include '../database.php';
 
-  $query = "SELECT * FROM users_movies;";
+  //Retrieve movie details from favorited table
+  $id= $_SESSION["uid"];
+  $query = "SELECT movie.mid, movie.cover_art, movie.title, movie.description FROM movie RIGHT JOIN user_movies ON user_movies.mid = movie.mid";
 
   try {
       $stmt = $conn->prepare($query);
       $stmt->execute();
-      $allMovieResult = $stmt->get_result();
+      $favorites = $stmt->get_result();
   } catch (Exception $e){
       error_log($e->getMessage());
       exit("Error connecting to the database to get all movies.");
@@ -38,7 +41,7 @@
       ";
   }
 
-  //TODO get users favorite movies (off of UID in cookie)
+
 
 ?>
 
@@ -59,7 +62,10 @@
 
 <body class="bg-light">
   <nav class="navbar navbar-dark bg-dark">
-    <a class="navbar-brand">NetflixClone</a>
+    <a class="navbar-brand" href="home.php">NetflixClone</a>
+    <li class="navbar-nav mr-auto">
+      <a class="nav-link" href="favorites.php">Favorites</a>
+    </li>
     <form class="form-inline">
       <a class="btn btn-sm btn-outline-danger" href="logout.php">Log Out</a>
     </form>
@@ -70,27 +76,12 @@
     <hr>
     <div class="row row-cols-3">
       <?php
-                //TODO cycle over user's favorite movies and put in a boostrap card
-            ?>
-      <div class="col">
-        user favorite movie
-      </div>
-      <div class="col">
-        user favorite movie
-      </div>
-      <div class="col">
-        user favorite movie
-      </div>
+        while($row = $favorites->fetch_assoc()){
+          createMovieCard($row);
+        }
+      ?>
     </div>
-    <p class="mt-5">All Movies</p>
-    <hr>
-    <div class="row row-cols-3">
-      <?php
-                while($row = $allMovieResult->fetch_assoc()){
-                    createMovieCard($row);
-                }
-            ?>
-    </div>
+
   </div>
 
   <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"
