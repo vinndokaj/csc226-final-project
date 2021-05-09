@@ -77,6 +77,23 @@
     if(!$noReviewsFlag){
         $avgReview = $avgReview / $reviewResult->num_rows;
     }
+
+    if(isset($_POST['deleteReview'])){
+        $delQuery = "DELETE FROM review WHERE rid=?";
+        try{
+            $stmt = $conn->prepare($delQuery);
+            $stmt->bind_param("i", $_POST['deleteReview']);
+            $stmt->execute();
+            header("Refresh:0");
+        }catch(Exception $e){
+            error_log($e->getMessage());
+            exit("Error connecting to the database to get movie with id $movie_id.");
+        }
+    }
+
+    function deleteReview($review_id){
+        var_dump("poop");
+    }
 ?>
 
 <!doctype html>
@@ -197,6 +214,7 @@
             else :
                 foreach($reviews as $review){
                     //consider also displaying username
+                    $rid = $review['rid'];
                     $title = $review['title'];
                     $rating = $review['rating'];
                     $content = $review['content'];
@@ -210,7 +228,11 @@
                             <span class='text-muted'>$content</span>
                     ";
                     if($_SESSION['uid'] === $review['user_id']){
-                        echo "<br><button class='mt-1 btn btn-outline-danger' onclick>Delete Review</button>";
+                        echo "
+                            <br>
+                            <form method='POST'>
+                            <button class='mt-1 btn btn-outline-danger' name='deleteReview' value='$rid'>Delete Review</button>
+                            </form>";
                     }
                     echo "
                         </div>
