@@ -11,7 +11,7 @@
 
   //Retrieve movie details from favorited table
   $id= $_SESSION["uid"];
-  $query = "SELECT DISTINCT movie.mid, movie.cover_art, movie.title, movie.description FROM user_movies JOIN movie ON user_movies.mid = movie.mid AND user_movies.uid = $id";
+  $query = "SELECT DISTINCT movie.mid, movie.cover_art, movie.title, movie.description FROM favorite JOIN movie ON favorite.movie_id = movie.mid AND favorite.user_id = $id";
 
   try {
       $stmt = $conn->prepare($query);
@@ -19,7 +19,7 @@
       $favorites = $stmt->get_result();
   } catch (Exception $e){
       error_log($e->getMessage());
-      exit("Error connecting to the database to get all movies.");
+      exit("Error connecting to the database to get favorite movies.");
   }
 
   function createMovieCard($info){
@@ -73,7 +73,7 @@
   </nav>
 
   <div class="container mt-3">
-    <p>Your Favorites</p>
+    <p class="mt-5">Your Favorites</p>
     <hr>
     <div class="row row-cols-3">
       <?php
