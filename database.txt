@@ -35,10 +35,9 @@ CREATE TABLE favorite (
     movie_id INT,
     user_id INT,
     FOREIGN KEY (movie_id) REFERENCES movie(mid), 
-    FOREIGN KEY (user_id) REFERENCES user(uid)
+    FOREIGN KEY (user_id) REFERENCES user(uid),
+    UNIQUE KEY (movie_id, user_id)
 );
-
-INSERT INTO favorite (movie_id, user_id) VALUES (1,1);
 
 INSERT INTO movie (title, description, cover_art) VALUES ("Borat Subsequent Moviefilm", "Released from prison for bringing shame to his country, Kazakh funnyman Borat risks life and limb when he returns to America with his 15-year-old daughter.", 'images/borat-2.jpg');
 INSERT INTO movie (title, description, cover_art) VALUES ("City of Lies", "Los Angeles Police Department detective Russell Poole has spent years trying to solve his biggest case -- the murders of The Notorious B.I.G. and Tupac Shakur -- but after two decades, the investigation remains open. Jack Jackson, a reporter desperate to save his reputation and career, is determined to find out why. In search of the truth, the two team up and unravel a growing web of institutional corruption and lies.", 'images/City-of-Lies.jpg');

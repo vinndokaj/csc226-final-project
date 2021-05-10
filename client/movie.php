@@ -108,11 +108,14 @@
 
     <title><?php echo $movieInfo['title']?></title>
   </head>
-  <body>
+  <body class="bg-light">
     <nav class="navbar navbar-dark bg-dark">
         <a class="navbar-brand" href="home.php">NetflixClone</a>
+        <li class="navbar-nav mr-auto">
+        <a class="nav-link" href="favorites.php">Favorites</a>
+        </li>
         <form class="form-inline">
-            <a class="btn btn-sm btn-outline-danger" href="logout.php">Log Out</a>
+        <a class="btn btn-sm btn-outline-danger" href="logout.php">Log Out</a>
         </form>
     </nav>
 

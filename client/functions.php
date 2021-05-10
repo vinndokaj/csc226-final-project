@@ -24,9 +24,9 @@
                     <form method='POST'>
         ";
         if($uid == NULL){
-          echo "<button type='button' class='btn btn-outline-warning btn-sm'>Favorite</button>";
+          echo "<button name='favorite' value='$mid' class='btn btn-outline-warning btn-sm'>Favorite</button>";
         } else if ($uid == $_SESSION['uid']){
-          echo "<button type='button' class='btn btn-outline-success btn-sm'>Unfavorite</button>";
+          echo "<button name='unfavorite' value='$mid' class='btn btn-outline-success btn-sm'>Unfavorite</button>";
         }
         echo "
                     </form>
