@@ -1,4 +1,5 @@
 <?php
+  include "functions.php";
   include "../session.php";
 
   //If there is no session, redirect to landing page
@@ -9,35 +10,16 @@
 
   include '../database.php';
 
-  $query = "SELECT * FROM movie;";
+  $query = "SELECT movie.*, favorite.user_id FROM movie LEFT JOIN favorite ON movie.mid = favorite.movie_id WHERE favorite.user_id = ? OR ISNULL(user_id)";
 
   try {
       $stmt = $conn->prepare($query);
+      $stmt->bind_param("i", $_SESSION['uid']);
       $stmt->execute();
       $allMovieResult = $stmt->get_result();
   } catch (Exception $e){
       error_log($e->getMessage());
       exit("Error connecting to the database to get all movies.");
-  }
-
-  function createMovieCard($info){
-      $mid = $info['mid'];
-      $imgPath = $info['cover_art'];
-      $title = $info['title'];
-      $description = $info['description'];
-      echo "
-      <div class='col mb-3'>
-          <div class='card p-3 h-100' style='width: 22rem;'>
-              <img src='$imgPath' class='card-img-top' alt='...'>
-              <div class='card-body'>
-                  <h5 class='card-title'>$title</h5>
-                  <p class='card-text'>$description</p>
-                  <a href='movie.php?mid=$mid' class='btn btn-primary'>Reviews</a>
-                  <button type='button' class='btn btn-outline-warning btn-sm'>Favorite</button>
-              </div>
-          </div>
-      </div>
-      ";
   }
 ?>
 
@@ -72,10 +54,10 @@
     <hr>
     <div class="row row-cols-3">
       <?php
-                while($row = $allMovieResult->fetch_assoc()){
-                    createMovieCard($row);
-                }
-            ?>
+        while($row = $allMovieResult->fetch_assoc()){
+          createMovieCard($row);
+        }
+      ?>
     </div>
   </div>
 

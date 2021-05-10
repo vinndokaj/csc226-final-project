@@ -1,4 +1,5 @@
 <?php
+  include "functions.php";
   include "../session.php";
 
   //If there is no session, redirect to landing page
@@ -10,40 +11,18 @@
   include '../database.php';
 
   //Retrieve movie details from favorited table
-  $id= $_SESSION["uid"];
-  $query = "SELECT DISTINCT movie.mid, movie.cover_art, movie.title, movie.description FROM favorite JOIN movie ON favorite.movie_id = movie.mid AND favorite.user_id = $id";
+  $id = $_SESSION["uid"];
+  $query = "SELECT movie.*, favorite.user_id FROM movie LEFT JOIN favorite ON movie.mid = favorite.movie_id WHERE favorite.user_id = ?";
 
   try {
       $stmt = $conn->prepare($query);
+      $stmt->bind_param("i", $_SESSION['uid']);
       $stmt->execute();
       $favorites = $stmt->get_result();
   } catch (Exception $e){
       error_log($e->getMessage());
       exit("Error connecting to the database to get favorite movies.");
   }
-
-  function createMovieCard($info){
-      $mid = $info['mid'];
-      $imgPath = $info['cover_art'];
-      $title = $info['title'];
-      $description = $info['description'];
-      echo "
-      <div class='col mb-3'>
-          <div class='card p-3 h-100' style='width: 22rem;'>
-              <img src='$imgPath' class='card-img-top' alt='...'>
-              <div class='card-body'>
-                  <h5 class='card-title'>$title</h5>
-                  <p class='card-text'>$description</p>
-                  <a href='movie.php?mid=$mid' class='btn btn-primary'>Reviews</a>
-                  <button type='button' class='btn btn-outline-warning btn-sm'>Unfavorite</button>
-              </div>
-          </div>
-      </div>
-      ";
-  }
-
-
-
 ?>
 
 <!doctype html>
