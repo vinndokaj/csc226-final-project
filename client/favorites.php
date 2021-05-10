@@ -11,7 +11,7 @@
 
   //Retrieve movie details from favorited table
   $id= $_SESSION["uid"];
-  $query = "SELECT movie.mid, movie.cover_art, movie.title, movie.description FROM movie RIGHT JOIN user_movies ON user_movies.mid = movie.mid";
+  $query = "SELECT DISTINCT movie.mid, movie.cover_art, movie.title, movie.description FROM user_movies JOIN movie ON user_movies.mid = movie.mid AND user_movies.uid = $id";
 
   try {
       $stmt = $conn->prepare($query);
