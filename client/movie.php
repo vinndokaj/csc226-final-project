@@ -1,6 +1,6 @@
 <?php
     include "../session.php";
-    include 'reviewHandler.php';
+    include "reviewHandler.php";
 
     if(!isset($_SESSION['user_email']) || !isset($_SESSION['uid'])){
         header("Location: index.php");
@@ -8,6 +8,7 @@
     }
 
     include '../database.php';
+    include "favoritesHandler.php";
 
     //if no mid is specificed redirect to homepage 
     if(!isset($_GET['mid'])){
@@ -15,11 +16,18 @@
     }
 
     $movie_id = $_GET['mid'];
-    $movieQuery = "SELECT * FROM movie WHERE mid=?";
+    $movieQuery = "SELECT movie.*, f.user_id 
+        FROM movie 
+        LEFT JOIN ( 
+            SELECT * 
+            FROM favorite
+            WHERE user_id = ?) as f
+        ON movie.mid = f.movie_id 
+        WHERE movie.mid = ?";
 
     try{
         $stmt = $conn->prepare($movieQuery);
-        $stmt->bind_param("i", $movie_id);
+        $stmt->bind_param("ii", $_SESSION['uid'], $movie_id);
         $stmt->execute();
         $movieResult = $stmt->get_result();
         $movieInfo = $movieResult->fetch_assoc();
@@ -90,10 +98,6 @@
             exit("Error connecting to the database to delete review.");
         }
     }
-
-    function deleteReview($review_id){
-        var_dump("poop");
-    }
 ?>
 
 <!doctype html>
@@ -137,6 +141,15 @@
                         <span class="font-weight-bold p-3">Description</span>
                         <p class="font-weight-light p-3"> <?php echo $movieInfo['description']?> </p>
                     </div>
+                    <form method="POST">
+                        <?php 
+                            if($movieInfo['user_id'] == NULL){
+                                echo "<button name='favorite' value='$movie_id' class='btn btn-outline-warning btn-sm'>Favorite</button>";
+                            } else {
+                                echo "<button name='unfavorite' value='$movie_id' class='btn btn-outline-success btn-sm'>Unfavorite</button>";
+                            }
+                        ?>
+                    </form>
                 </div>
             </div>
         </div>
