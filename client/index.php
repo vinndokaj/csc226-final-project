@@ -28,7 +28,7 @@ if (isset($_SESSION['user_email']) && !empty($_SESSION['user_email']))
   <div class="container">
     <nav class="navbar navbar-light">
       <div>
-        <a class="navbar-brand px-2 py-1 bg-light">{Fake Netflix}</a>
+        <a class="navbar-brand px-2 py-1 bg-light">Netflix Reviews</a>
       </div>
       <div>
         <a href="login.php" class="btn btn-primary">Login</a>
@@ -38,7 +38,7 @@ if (isset($_SESSION['user_email']) && !empty($_SESSION['user_email']))
     <div class="row mt-5">
       <div class="col d-flex justify-content-center mt-5">
         <p class="display-4 mt-5 bg-light px-2 py-1">
-          WELCOME TO FAKE NETFLIX
+          WELCOME TO NETFLIX REVIEWS
         </p>
       </div>
     </div>

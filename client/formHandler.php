@@ -1,11 +1,5 @@
 <?php
-    function santizeInput($input){
-        $input = trim($input);
-        $input = stripcslashes($input);
-        $input = htmlspecialchars($input);
-
-        return $input;
-    }
+    include "functions.php";
     
     $errors = [];
 

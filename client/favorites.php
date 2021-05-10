@@ -9,6 +9,7 @@
   }
 
   include '../database.php';
+  include 'favoritesHandler.php';
 
   //Retrieve movie details from favorited table
   $id = $_SESSION["uid"];
@@ -56,9 +57,13 @@
     <hr>
     <div class="row row-cols-3">
       <?php
-        while($row = $favorites->fetch_assoc()){
-          createMovieCard($row);
-        }
+        if($favorites->num_rows != 0):
+          while($row = $favorites->fetch_assoc()){
+            createMovieCard($row);
+          }
+        else:
+          echo "<p class='display-4'>Start adding movies to your favorites!</p>";
+        endif;
       ?>
     </div>
 

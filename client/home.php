@@ -9,8 +9,15 @@
   }
 
   include '../database.php';
+  include 'favoritesHandler.php';
 
-  $query = "SELECT movie.*, favorite.user_id FROM movie LEFT JOIN favorite ON movie.mid = favorite.movie_id WHERE favorite.user_id = ? OR ISNULL(user_id)";
+  $query = "SELECT movie.*, f.user_id 
+    FROM movie 
+    LEFT JOIN ( 
+      SELECT * 
+      FROM favorite
+      WHERE user_id = ?) as f
+    ON movie.mid = f.movie_id ORDER BY movie.mid;";
 
   try {
       $stmt = $conn->prepare($query);
